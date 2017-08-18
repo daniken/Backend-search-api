@@ -18,7 +18,6 @@ Executing `python tests.py` in the test folder will clock some operations while 
 
 ### **Correctness**
 * The backend returns a list of the most popular products of all the shops within the given radius which seems to be the intended output of this endpoint. But while constructing the pins for each product, multiple products may be originate from the same shop, which will result in multiple pins at the same exact shop location. This is a problem since, while hovering over the pins, only one product pin of the same shop can be displayed at a time. This is not well thought out...
-* I'm a bit unsure about the conversion from radius in meters to radius in degrees. Seems fine in the browser though.
 
 ### **Quality & Design**
 * I take for granted that column-labels in the provided .csv files are finalized. In a production setting, my code would break if the column-names would be renamed.
