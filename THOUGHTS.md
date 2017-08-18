@@ -25,7 +25,6 @@ Executing `python tests.py` in the test folder will clock some operations while 
 * I would consider clock more of my operations against other possible operations that produce the same results and analyze their performance in different settings.
 * I have not considered handling multiple clients. I've tried the API using two browser tabs simultaneously but I don't know exactly how this affects the server load.
 * I have not considered any memory management which is a important aspect to consider.
-* 
 
 ### **Performance**
 * While searching for tag IDs that match any of the specified tags, a small performance improvement would be to remove a tag, once found, from the list in which we are matching against. This would reduce the number of comparisons. This improvement is rather small since the number of tags are miniscule compared to, for example, the number of products. 
