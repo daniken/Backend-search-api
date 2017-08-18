@@ -29,7 +29,7 @@ Executing `python tests.py` in the test folder will clock some operations while 
 ### **Performance**
 * While searching for tag IDs that match any of the specified tags, a small performance improvement would be to remove a tag, once found, from the list in which we are matching against. This would reduce the number of comparisons. This improvement is rather small since the number of tags are miniscule compared to, for example, the number of products. 
 * Preprocess the specified tags and remove bad ones e.g. 'sh1rts', 'lamp(s)' etc. before finding tag IDs of valid tags.
-* The performance could be sped up if we had a data structure holding product IDs for every shop. Possibly a column in shops.csv with all product IDs of that shop seperated by a comma or to a hash table/dictionary structure. Then we wouldn't have to load and go through ALL products while matching against shop IDs of just a few products. The same goes for tags for each shop.
+* The performance could be sped up if we had a data structure holding product IDs for every shop. Possibly a column in shops.csv with all product IDs of that shop seperated by a comma or using a hash table/dictionary structure. Then we wouldn't have to load and go through ALL products while matching against shop IDs of just a few products. The same goes for tags for each shop.
 * Performance tests show that it is currently faster to first filter shops by tags (if provided) then filter by location instead of first filtering by location and then by tags. This may change depending on the relative sizes of the involved datasets.
 * One could consider clustering the shops by regions to reduce the amount of shops to consider while filtering by location which improves the performance.
 
