@@ -1,6 +1,5 @@
 import pandas as pd
 import math
-import numpy as np
 
 ### methods supporting search API ###
 
