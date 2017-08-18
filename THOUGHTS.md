@@ -4,6 +4,9 @@ Tests can be found in `test/tests.py`.
 
 Executing `python tests.py` in the test folder will clock some operations while executing `pytest tests.py` will perform assertion tests.
 
+### **Additional dependencies**
+`pandas` for handling and manipulating csv files.
+
 ### **Backend logic**
 * Error-check input parameters
 * If tags are provided:
