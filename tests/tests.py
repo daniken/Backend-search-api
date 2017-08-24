@@ -277,28 +277,19 @@ def filter_shops_by_id_two():
 ### Functions that filter shops by tag IDs and location in different orders/ways ###
 ###
 
-#	First filters by location and then
-#	checks for tags using for-loop over all located shops
+#	First filters by location and then filters by tags.
 def filter_shops_by_tag_ids_one():
 
-	shops_df = filter_shops_by_location_one()
+	shops_df = filter_shops_by_location_one()	
+	shop_ids = shops_df['id'].tolist()
 
 	taggings_df = pd.read_csv('../data/taggings.csv')
-	taggings_idf = taggings_df.set_index(taggings_df['shop_id'])
+	taggings_df = taggings_df[taggings_df['shop_id'].isin(shop_ids)]
+	taggings_df = taggings_df[taggings_df['tag_id'].isin(tag_ids)]
+	shop_ids = taggings_df['shop_id'].tolist()
 
-	shop_indicies_with_tag = []
-	i = 0
-	for shop_id in shops_df['id']:
+	return shops_df[shops_df['id'].isin(shop_ids)]
 
-		shop_tag_ids = taggings_idf.loc[shop_id]['tag_id'].tolist()
-
-		for tag_id in tag_ids:
-			if tag_id in shop_tag_ids:
-				shop_indicies_with_tag.append(i)
-				break	# Found one match, no need to continue searching.
-
-		i += 1
-	return shops_df.iloc[shop_indicies_with_tag, :]
 
 
 #	First filters taggings by tag IDs using a baked-for-loop then
