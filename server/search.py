@@ -27,25 +27,24 @@ def compute_if_within(u, v0, v1, r):
 	return EARTH_RADIUS * c <= r
 
 
-#	Returns a list of tag IDs that matched against client's tags
+#	Returns a list of tag IDs that matched against client's tags.
 #	@param {Dataframe}	tags_df 	Dataframe with structure as tags.csv.
-#	@param {list} 		client_tags Contains specified tags that we want to match against.
+#	@param {list} 		client_tags 	Contains specified tags that we want to match against.
 def get_tag_ids_by_tags(tags_df, client_tags):
 	return [tags_df.loc[i, 'id'] for i in range(tags_df.shape[0]) if tags_df.loc[i, 'tag'] in client_tags]
 
 
-#	Returns a pandas dataframe with shops that are within the radius of client's geo-position
-#	@param {Dataframe}	shops_df	Dataframe with structure as shops.csv.
-#	@param {Tuple} 		client_pos 	Contains lat. and lng. coordinates of current client position.
-# 	@param {Float}		radius		Specified search radius.
+#	Returns a filtered pandas dataframe with shops that are within the radius of client's geo-position.
+#	@param {Dataframe}	shops_df	Dataframe with structure as shops.csv to be filtered.
+#	@param {Tuple} 		client_pos 	Contains lat. and lng. coordinates of client's current geo-position.
+# 	@param {Float}		radius		Specified search radius in units of meters.
 def filter_shops_by_location(shops_df, client_pos, radius):
 	return shops_df[shops_df.apply(compute_if_within, axis=1, args=(client_pos[0], client_pos[1], radius,))]
 
 
-#	Filters @taggings_df against tags IDs in @tag_ids and
-#	returns a dataframe only with shops that match atleast one tag.
-#	@param {Dataframe}	shops_df 	Dataframe with structure as shops.csv.
-#	@param {Dataframe}	taggings_df Dataframe with structure as taggings.csv.
+#	Returns a filtered pandas dataframe with shops that have atleast one matching tag in @tag_ids.
+#	@param {Dataframe}	shops_df 	Dataframe with structure as shops.csv to be filtered.
+#	@param {Dataframe}	taggings_df 	Dataframe with structure as taggings.csv for relating shops with tags.
 #	@param {list}		tag_ids 	Contains tag IDs for the tags we want to match against.
 def filter_shops_by_tag_ids(shops_df, taggings_df, tag_ids):
 
@@ -53,9 +52,9 @@ def filter_shops_by_tag_ids(shops_df, taggings_df, tag_ids):
 	return  shops_df[shops_df['id'].isin(shop_ids_by_tags)]
 
 
-# 	filters @products_df and returns a pd dataframe with enteries whos shop ID match in @shop_ids
-#	@param {Dataframe} products_df 	Dataframe with structure as products.csv.
-#	@param {Dataframe} shops_df 	Dataframe with structure as shops.csv.
+# 	Returns a filtered pandas dataframe with products from the shops in @shop_ids.
+#	@param {Dataframe} products_df 	Dataframe with structure as products.csv to be filtered.
+#	@param {list} shops_ids 	Contains shop IDs for the shops we want to match against.
 def filter_products_by_shop_ids(products_df, shop_ids):
 	return products_df[products_df['shop_id'].isin(shop_ids)]
 
@@ -63,33 +62,33 @@ def filter_products_by_shop_ids(products_df, shop_ids):
 #	Sorts rows in @products_df w.r.t. popularity.
 #	Removes out-of-stock products and returns a dataframe with a maximum length of @count.
 #	@param {Dataframe}	products_df 	Dataframe with structure as products.csv.
-#	@param {Integer} 	count 			Maxmimum number of products to display.
+#	@param {Integer} 	count 		Maxmimum number of products to display.
 def finalize_products(products_df, count):
 
 	temp_df = products_df.sort_values('popularity', axis=0, ascending=False)
 
 	product_indices = []
-	products = 0
+	n_products = 0
 
 	# breaks once @count products in-stock has been found
 	for idx in range(temp_df.shape[0]):
 		
 		if temp_df.iloc[idx,:]['quantity'] != 0:
 			product_indices.append(idx)
-			products += 1
-			if products > count:
+			n_products += 1
+			if n_products > count:
 				break
 
 	return temp_df.iloc[product_indices,:]
 
 
-#	Returns a list of dictionaries, each dictionary corresponding a product.
-#	Each dictionary has information product title, popularity and nested shop coordinates
-#	@param {Dataframe} products_df	Dataframe with structure as products.csv.
-#	@param {Dataframe} shops_df 	Dataframe with structure as shops.csv.
+#	Returns a list of dictionaries, each dictionary corresponding to a product.
+#	Each dictionary has information such as product title, popularity and nested shop coordinates
+#	@param {Dataframe} products_df	Dataframe with structure as products.csv containing the final products.
+#	@param {Dataframe} shops_df 	Dataframe with structure as shops.csv for relating geo-positions to products.
 def products_to_dicts(products_df, shops_df):
 	
-	# Need column-indices to access values via .iloc[].
+	# Need column-indices of 'lat' and 'lng' to access values via .iloc[].
 	lat_idx = shops_df.columns.get_loc('lat')
 	lng_idx = shops_df.columns.get_loc('lng')
 
